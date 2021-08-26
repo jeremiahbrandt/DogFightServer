@@ -19,6 +19,7 @@ namespace webSocketServer
 {
     public class Startup
     {
+        HashSet<WebSocket> sockets = new HashSet<WebSocket>();
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -59,13 +60,20 @@ namespace webSocketServer
             {
                 if (context.Request.Path == "/ws")
                 {
-                    if (context.WebSockets.IsWebSocketRequest) {
+                    if (context.WebSockets.IsWebSocketRequest)
+                    {
                         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        sockets.Add(webSocket);
+                        
                         await WebSocketHandler(context, webSocket);
-                    } else {
+                    }
+                    else
+                    {
                         context.Response.StatusCode = 400;
                     }
-                } else {
+                }
+                else
+                {
                     await next();
                 }
             });
@@ -75,15 +83,42 @@ namespace webSocketServer
                 endpoints.MapControllers();
             });
         }
-    
-        private async Task WebSocketHandler(HttpContext context, WebSocket webSocket) {
+
+        private async Task WebSocketHandler(HttpContext context, WebSocket webSocket)
+        {
+            Console.WriteLine("WebSocket connected");
             var buffer = new byte[1024 * 4];
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            while (!result.CloseStatus.HasValue) {
-                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+            while (webSocket.State == WebSocketState.Open)
+            {
+                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                if (result.MessageType == WebSocketMessageType.Text)
+                {
+                    var message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    Console.WriteLine("Message received: " + message);
+                }
+                await SendGlobalMessage("Hello from server");
+                // var buffer2 = System.Text.Encoding.UTF8.GetBytes("Hello from server");
+                // await webSocket.SendAsync(new ArraySegment<byte>(buffer2, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                // await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
             }
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+
+        }
+
+        private async Task SendGlobalMessage(string message)
+        {
+            foreach (WebSocket socket in sockets)
+            {
+                await socket.SendAsync(new ArraySegment<byte>(System.Text.Encoding.UTF8.GetBytes(message)), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+        }
+
+        private async Task CloseConnections()
+        {
+            foreach (WebSocket socket in sockets)
+            {
+                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Server is shutting down", CancellationToken.None);
+            }
         }
     }
 }
