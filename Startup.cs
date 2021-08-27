@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace webSocketServer
 {
@@ -64,7 +66,7 @@ namespace webSocketServer
                     {
                         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         sockets.Add(webSocket);
-                        
+
                         await WebSocketHandler(context, webSocket);
                     }
                     else
@@ -95,13 +97,34 @@ namespace webSocketServer
                 {
                     var message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
                     Console.WriteLine("Message received: " + message);
+                    ReadMessage(message);
                 }
-                await SendGlobalMessage("Hello from server");
+                // await SendGlobalMessage("Hello from server");
                 // var buffer2 = System.Text.Encoding.UTF8.GetBytes("Hello from server");
-                // await webSocket.SendAsync(new ArraySegment<byte>(buffer2, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 // await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
             }
+        }
+
+        private void ReadMessage(String message)
+        {
+            var json = JObject.Parse(message);
+            var type = json["type"].ToString();
+            if (type == "join")
+            {
+                HandleJoin(JsonConvert.DeserializeObject<JoinRequest>(message));
+            }
+
+        }
+
+        private void HandleJoin(JoinRequest request)
+        {
+            Console.WriteLine("{0} requested to join.", request.UserId);
+        }
+
+        private async Task CalculatePlayerPositions()
+        {
 
         }
 

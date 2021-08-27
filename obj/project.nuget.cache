@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "7ErHWy4H13q9hfLBGFXjxSn03Qq1DinBJhq3RVJRTAMoKQnnfIny+hbIVIjVvme8IoKya9B5r8SEaDOCg5M5cA==",
+  "dgSpecHash": "k0Vsy4JvMPGdue1eOnY7F5MutvF7vm+ouvetdmu5f+MUL/KFTBzG9W8d2reJ51JjTR7WndB/Rn4GRf1K1wGNxA==",
   "success": true,
   "projectFilePath": "C:\\Users\\jerem\\source\\repos\\webSocketServer\\webSocketServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jerem\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\jerem\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",

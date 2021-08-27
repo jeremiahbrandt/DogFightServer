@@ -27,3 +27,4 @@ C:\Users\jerem\source\repos\webSocketServer\obj\Debug\net5.0\webSocketServer.dll
 C:\Users\jerem\source\repos\webSocketServer\obj\Debug\net5.0\ref\webSocketServer.dll
 C:\Users\jerem\source\repos\webSocketServer\obj\Debug\net5.0\webSocketServer.pdb
 C:\Users\jerem\source\repos\webSocketServer\obj\Debug\net5.0\webSocketServer.genruntimeconfig.cache
+C:\Users\jerem\source\repos\webSocketServer\bin\Debug\net5.0\Newtonsoft.Json.dll
